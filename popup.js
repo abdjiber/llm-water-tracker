@@ -54,6 +54,10 @@ document.addEventListener('DOMContentLoaded', function() {
   const pauseTrackingBtn = document.getElementById('pauseTrackingBtn');
   const stopTrackingBtn = document.getElementById('stopTrackingBtn');
 
+  const chatgptCount = document.getElementById('chatgptCount');
+  const claudeCount = document.getElementById('claudeCount');
+  const geminiCount = document.getElementById('geminiCount');
+
   // Add this constant at the top of the file
   const allCountries = {
     'AF': 'Afghanistan', 'AL': 'Albania', 'DZ': 'Algeria', 'AD': 'Andorra', 'AO': 'Angola', 'AG': 'Antigua and Barbuda', 'AR': 'Argentina', 'AM': 'Armenia', 'AU': 'Australia', 'AT': 'Austria', 'AZ': 'Azerbaijan',
@@ -239,15 +243,61 @@ document.addEventListener('DOMContentLoaded', function() {
     }
   }
 
+  // Function to update platform counts
+  function updatePlatformCounts(submissionCounts) {
+    const counts = {
+      'chatgpt.com': 0,
+      'claude.ai': 0,
+      'gemini.google.com': 0
+    };
+
+    // Calculate counts for each platform
+    Object.entries(submissionCounts || {}).forEach(([hostname, count]) => {
+      if (hostname.includes('chatgpt.com')) {
+        counts['chatgpt.com'] = (typeof count === 'object') 
+          ? Object.values(count).reduce((a, b) => a + b, 0) 
+          : count;
+      } else if (hostname.includes('claude.ai')) {
+        counts['claude.ai'] = (typeof count === 'object')
+          ? Object.values(count).reduce((a, b) => a + b, 0)
+          : count;
+      } else if (hostname.includes('gemini.google.com')) {
+        counts['gemini.google.com'] = (typeof count === 'object')
+          ? Object.values(count).reduce((a, b) => a + b, 0)
+          : count;
+      }
+    });
+
+    // Update the display with animation
+    updateCountWithAnimation(chatgptCount, counts['chatgpt.com']);
+    updateCountWithAnimation(claudeCount, counts['claude.ai']);
+    updateCountWithAnimation(geminiCount, counts['gemini.google.com']);
+  }
+
+  // Helper function to update count with animation
+  function updateCountWithAnimation(element, newValue) {
+    const currentValue = parseInt(element.textContent);
+    if (currentValue !== newValue) {
+      element.textContent = newValue;
+      element.classList.remove('updated');
+      // Trigger reflow
+      void element.offsetWidth;
+      element.classList.add('updated');
+    }
+  }
+
+  // Update the existing updatePopup function to include platform counts
   async function updatePopup() {
     try {
       const data = await chrome.storage.sync.get('submissionCounts');
       const submissionCounts = data.submissionCounts || {};
       
+      // Update platform-specific counts
+      updatePlatformCounts(submissionCounts);
+      
       // Calculate total submissions across all supported sites
       const totalSubmissions = Object.entries(submissionCounts).reduce((sum, [site, counts]) => {
         if (typeof counts === 'object') {
-          // Handle timestamped submissions
           return sum + Object.values(counts).reduce((a, b) => a + b, 0);
         }
         return sum + (counts || 0);

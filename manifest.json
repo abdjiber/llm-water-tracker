@@ -41,5 +41,13 @@
       ],
       "js": ["content.js"]
     }
-  ]
+  ],
+  "web_accessible_resources": [{
+    "resources": [
+      "icons/chatgpt.png",
+      "icons/claude.png",
+      "icons/gemini.png"
+    ],
+    "matches": ["<all_urls>"]
+  }]
 } 

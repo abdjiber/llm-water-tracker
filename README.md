@@ -14,6 +14,7 @@ LLM Water Tracker monitors your interactions with popular AI platforms (ChatGPT,
   - Monitors interactions with major LLM platforms
   - Converts interactions to water usage equivalents
   - Country-specific calculations based on data center locations
+  - Pause, resume, stop, and reset tracking anytime
 
 - 📊 **Detailed Statistics**
   - Weekly, monthly, and yearly usage breakdowns
@@ -24,20 +25,17 @@ LLM Water Tracker monitors your interactions with popular AI platforms (ChatGPT,
   - Set personal water usage goals
   - Visual progress tracking
   - Customizable weekly, monthly, and yearly limits
+  - Flexible settings with optional fields
 
-- 🌍 **Location-Aware**
-  - Uses your location to provide accurate calculations
-  - Multiple fallback options for location detection
-  - Respects privacy with local data storage
+- 🌍 **Country Selection**
+  - Choose your country from a comprehensive global list
+  - Country-specific water usage calculations
+  - Update your country anytime through settings
+  - Fallback to average values for countries without specific data
 
 ## Installation
 
-1. **Chrome Web Store**
-   - Visit the [Chrome Web Store](https://chrome.google.com/webstore) (link to be added)
-   - Click "Add to Chrome"
-   - Follow the installation prompts
-
-2. **Manual Installation (Developer Mode)**
+**Manual Installation (Developer Mode)**
    ```bash
    # Clone the repository
    git clone [repository-url]
@@ -54,16 +52,23 @@ LLM Water Tracker monitors your interactions with popular AI platforms (ChatGPT,
 1. **First-Time Setup**
    - Click the extension icon in your browser
    - Read through the welcome information
-   - Optionally grant location permissions for accurate calculations
-   - Set your usage limits (can be modified later)
+   - Select your country of residence
+   - Set your usage limits in the settings
 
 2. **Daily Use**
    - The extension automatically tracks your LLM interactions
    - Click the extension icon to view your statistics
    - Monitor your progress through the visual indicators
-   - Adjust limits through the settings button
+   - Pause or stop tracking using the control buttons
+   - Adjust settings through the settings button
 
-3. **Supported Platforms**
+3. **Tracking Controls**
+   - **Pause Tracking**: Temporarily stop counting interactions
+   - **Resume Tracking**: Continue counting from where you left off
+   - **Stop Tracking**: Completely disable tracking (can be re-enabled in settings)
+   - **Reset**: Reset tracking
+
+4. **Supported Platforms**
    - ChatGPT (chatgpt.com)
    - Claude (claude.ai)
    - Gemini (gemini.google.com)
@@ -72,21 +77,20 @@ LLM Water Tracker monitors your interactions with popular AI platforms (ChatGPT,
 
 - All data is stored locally in your browser
 - No personal information is transmitted
-- Location data is used only for calculations
 - See our [Privacy Policy](privacy-policy.md) for details
 
 ## Technical Details
 
 ### Architecture
-- Built with vanilla JavaScript
+- Built with vanilla JavaScript, and Cursor
 - Uses Chrome Extension Manifest V3
 - Implements DOM Mutation Observer for interaction tracking
 - Uses Chrome Storage Sync API for data persistence
 
 ### Data Sources
-- Water usage calculations based on published research
-- Location services: Browser Geolocation API, ipapi.co
-- Reverse geocoding: BigDataCloud API
+- Water usage calculations based on published [research ](https://arxiv.org/pdf/2304.03271)
+- Country-specific calculations for global usage patterns
+- User-selected country preference stored locally
 
 ## Contributing
 
@@ -104,8 +108,6 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 ## Acknowledgments
 
 - Water usage data based on research from [arXiv:2304.03271](https://arxiv.org/pdf/2304.03271)
-- Icons and design elements from Material Symbols
-- Community contributions and feedback
 
 ## Support
 
@@ -124,7 +126,14 @@ For issues, feature requests, or questions:
 
 ## Version History
 
-- 1.0.1: Current stable release
+- 1.1.0: Latest update
+  - Added country selection feature (replaced automatic location detection)
+  - Added tracking controls (pause, resume, stop)
+  - Improved settings with flexible usage limits
+  - Enhanced user onboarding experience
+  - Added per-platform interaction counts
+
+- 1.0.1: Previous stable release
   - Added usage limits feature
   - Improved location detection
   - Enhanced UI/UX

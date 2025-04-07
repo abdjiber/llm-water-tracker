@@ -866,4 +866,82 @@ h2 {
 .control-button:disabled:hover {
   background-color: var(--card-background);
   color: var(--text-secondary);
+}
+
+.platform-stats {
+  margin: 16px 0;
+  padding: 16px;
+  background: var(--card-background);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-sm);
+}
+
+.platform-stats h2 {
+  font-size: 16px;
+  font-weight: 500;
+  color: var(--text-primary);
+  margin-bottom: 12px;
+}
+
+.platform-cards {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+}
+
+.platform-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  padding: 12px;
+  background: white;
+  border-radius: var(--radius-sm);
+  transition: all 0.2s ease;
+}
+
+.platform-card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+  background: linear-gradient(135deg, var(--card-background), white);
+}
+
+.platform-name {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--text-primary);
+}
+
+.platform-count {
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--primary-color);
+}
+
+/* Add animation for count updates */
+@keyframes countUpdate {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.1);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+.platform-count.updated {
+  animation: countUpdate 0.3s ease;
+}
+
+/* Add responsive design for smaller screens */
+@media (max-width: 320px) {
+  .platform-cards {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  
+  .platform-card:last-child {
+    grid-column: span 2;
+  }
 } 
