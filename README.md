@@ -8,6 +8,14 @@ A Chrome extension that helps users track and understand the water consumption i
 
 LLM Water Tracker monitors your interactions with popular AI platforms (ChatGPT, Claude, Gemini) and provides real-time insights into the equivalent water consumption of these interactions. Based on research showing that LLM interactions can consume significant amounts of water through data center cooling, this extension helps users make environmentally conscious decisions.
 
+## Demo
+
+Watch our demo video to see the extension in action:
+
+[![LLM Water Tracker Demo](https://img.youtube.com/vi/1GOkmYYVFXI/0.jpg)](https://youtu.be/1GOkmYYVFXI)
+
+[Watch on YouTube](https://youtu.be/1GOkmYYVFXI)
+
 ## Features
 
 - 🌊 **Real-time Water Usage Tracking**
