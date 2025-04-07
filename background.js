@@ -14,35 +14,44 @@ chrome.storage.sync.get('submissionCounts', (data) => {
 function isSupportedHostname(hostname) {
   return hostname.includes('chatgpt.com') || 
          hostname.includes('claude.ai') || 
-         hostname.includes('gemini.google.com') ||
-         hostname.includes('chat.mistral.ai');
+         hostname.includes('gemini.google.com')
 }
 
 // Listen for messages from content scripts
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   if (request.action === 'incrementSubmission') {
-    const url = new URL(sender.tab.url);
-    const hostname = url.hostname;
-    
-    if (isSupportedHostname(hostname)) {
-      // Initialize count for this hostname if it doesn't exist
-      if (!submissionCounts[hostname]) {
-        submissionCounts[hostname] = 0;
+    // Check tracking state before incrementing
+    chrome.storage.sync.get(['trackingState'], function(data) {
+      const trackingState = data.trackingState || 'active';
+      
+      if (trackingState === 'active') {
+        const url = new URL(sender.tab.url);
+        const hostname = url.hostname;
+        
+        if (isSupportedHostname(hostname)) {
+          // Initialize count for this hostname if it doesn't exist
+          if (!submissionCounts[hostname]) {
+            submissionCounts[hostname] = 0;
+          }
+          
+          // Increment the count for this hostname
+          submissionCounts[hostname]++;
+          
+          // Save to storage
+          chrome.storage.sync.set({ submissionCounts }, () => {
+            // Notify all popups to update
+            chrome.runtime.sendMessage({ 
+              action: 'updatePopup',
+              hostname: hostname,
+              count: submissionCounts[hostname]
+            });
+          });
+        }
       }
-      
-      // Increment the count for this hostname
-      submissionCounts[hostname]++;
-      
-      // Save to storage
-      chrome.storage.sync.set({ submissionCounts }, () => {
-        // Notify all popups to update
-        chrome.runtime.sendMessage({ 
-          action: 'updatePopup',
-          hostname: hostname,
-          count: submissionCounts[hostname]
-        });
-      });
-    }
+    });
+  } else if (request.action === 'updateTrackingState') {
+    // Handle tracking state updates
+    console.log('Tracking state updated to:', request.state);
   }
 });
 
@@ -62,8 +71,12 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
   }
 });
 
+// Add tracking state to the initial state
 chrome.runtime.onInstalled.addListener(() => {
-  chrome.storage.sync.set({ submissionCount: 0 });
+  chrome.storage.sync.set({ 
+    submissionCount: 0,
+    trackingState: 'active'
+  });
   console.log('LLM Water Tracker installed. Counter initialized to 0.');
 });
 
@@ -89,7 +102,7 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 chrome.tabs.onActivated.addListener((activeInfo) => {
   chrome.tabs.get(activeInfo.tabId, (tab) => {
     // Check if the URL matches the pages you're targeting
-    if (tab.url && (tab.url.includes('chatgpt.com') || tab.url.includes('gemini.google.com') || tab.url.includes('claude.ai'))) {
+    if (tab.url && isSupportedHostname(tab.url)) {
       // Inject the content script (separate file) into the tab
       chrome.scripting.executeScript({
         target: { tabId: activeInfo.tabId },

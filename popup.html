@@ -34,9 +34,31 @@
           <span class="material-symbols-rounded">info</span>
           <p>You can set your water usage limits anytime in the settings</p>
         </div>
+        <div class="privacy-note">
+          <span class="material-symbols-rounded">shield</span>
+          <p>By continuing, you agree to our <a href="https://github.com/abdjiber/llm-water-tracker/blob/main/privacy-policy.md" target="_blank">Privacy Policy</a></p>
+        </div>
         <button id="getStartedBtn" class="primary-button">
           <span class="material-symbols-rounded">water_drop</span>
           Get Started
+        </button>
+      </div>
+      <div class="onboarding-step hidden" id="countryStep">
+        <h2>Select Your Country</h2>
+        <p>To provide accurate water usage calculations, please select your country of residence:</p>
+        <div class="country-selection">
+          <select id="countrySelect" class="country-dropdown">
+            <option value="">Select a country...</option>
+          </select>
+          <div class="country-note">
+            <span class="material-symbols-rounded">info</span>
+            <p>If your country is not in our database, we'll use the average water usage value.</p>
+          </div>
+          <div id="countryError" class="error-message hidden">Please select a country</div>
+        </div>
+        <button id="continueBtn" class="primary-button">
+          <span class="material-symbols-rounded">arrow_forward</span>
+          Continue
         </button>
       </div>
     </div>
@@ -46,28 +68,60 @@
   <div id="settingsModal" class="modal hidden">
     <div class="modal-content">
       <div class="modal-header">
-        <h2>Usage Limits</h2>
+        <h2>Settings</h2>
         <button class="close-button" id="closeSettings">
           <span class="material-symbols-rounded">close</span>
         </button>
       </div>
-      <div class="limits-form">
-        <div class="limit-input">
-          <label for="weeklyLimitSettings">Weekly Limit (L)</label>
-          <input type="number" id="weeklyLimitSettings" min="0" step="0.1">
-          <div id="weeklyError" class="error-message hidden"></div>
-        </div>
-        <div class="limit-input">
-          <label for="monthlyLimitSettings">Monthly Limit (L)</label>
-          <input type="number" id="monthlyLimitSettings" min="0" step="0.1">
-          <div id="monthlyError" class="error-message hidden"></div>
-        </div>
-        <div class="limit-input">
-          <label for="yearlyLimitSettings">Yearly Limit (L)</label>
-          <input type="number" id="yearlyLimitSettings" min="0" step="0.1">
-          <div id="yearlyError" class="error-message hidden"></div>
+
+      <!-- Add tracking status section -->
+      <div class="settings-section">
+        <h3>Tracking Status</h3>
+        <div class="tracking-status">
+          <p class="status-text">Current status: <span id="trackingStatusText">Active</span></p>
+          <button id="enableTrackingBtn" class="secondary-button hidden">
+            <span class="material-symbols-rounded">play_arrow</span>
+            Enable Tracking
+          </button>
         </div>
       </div>
+
+      <!-- Add country selection section -->
+      <div class="settings-section">
+        <h3>Country</h3>
+        <div class="country-selection">
+          <select id="countrySettingsSelect" class="country-dropdown">
+            <option value="">Select a country...</option>
+          </select>
+          <div class="country-note">
+            <span class="material-symbols-rounded">info</span>
+            <p>If your country is not in our database, we'll use the average water usage value.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Existing usage limits section -->
+      <div class="settings-section">
+        <h3>Usage Limits</h3>
+        <div class="limits-form">
+          <div class="limit-input">
+            <label for="weeklyLimitSettings">Weekly Limit (L)</label>
+            <input type="number" id="weeklyLimitSettings" min="0" step="0.1">
+            <div id="weeklyError" class="error-message hidden"></div>
+          </div>
+          <div class="limit-input">
+            <label for="monthlyLimitSettings">Monthly Limit (L)</label>
+            <input type="number" id="monthlyLimitSettings" min="0" step="0.1">
+            <div id="monthlyError" class="error-message hidden"></div>
+          </div>
+          <div class="limit-input">
+            <label for="yearlyLimitSettings">Yearly Limit (L)</label>
+            <input type="number" id="yearlyLimitSettings" min="0" step="0.1">
+            <div id="yearlyError" class="error-message hidden"></div>
+          </div>
+        </div>
+      </div>
+
       <button id="saveSettingsBtn" class="primary-button">
         <span class="material-symbols-rounded">save</span>
         Save Changes
@@ -89,6 +143,16 @@
       <div id="statusIndicator" class="status-indicator">
         <span class="material-symbols-rounded status-icon">radio_button_checked</span>
         <span id="statusText">Checking site support...</span>
+      </div>
+      <div class="tracking-controls">
+        <button id="pauseTrackingBtn" class="control-button" title="Pause Tracking">
+          <span class="material-symbols-rounded">pause</span>
+          <span class="button-text">Pause Tracking</span>
+        </button>
+        <button id="stopTrackingBtn" class="control-button warning" title="Stop Tracking">
+          <span class="material-symbols-rounded">stop</span>
+          <span class="button-text">Stop Tracking</span>
+        </button>
       </div>
     </header>
 

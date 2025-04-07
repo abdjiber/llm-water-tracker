@@ -7,13 +7,6 @@ LLM Water Tracker is a browser extension that helps users track their environmen
 
 ## Information We Collect
 
-### 1. Location Data
-- **Geolocation**: With your permission, we collect your approximate location using the browser's geolocation API
-- **IP-based Location**: As a fallback, we may determine your country using IP-based geolocation
-- **Browser Locale**: As a final fallback, we use your browser's locale settings
-- **Purpose**: Location data is used solely to provide accurate water usage calculations based on your country's data center locations
-- **Storage**: Location preferences are stored locally and are not transmitted to any external servers
-
 ### 2. Usage Statistics
 - **Interaction Counts**: We track the number of interactions with supported LLM platforms (ChatGPT, Claude, Gemini)
 - **Site-specific Data**: We record which supported platforms you use
@@ -30,7 +23,7 @@ LLM Water Tracker is a browser extension that helps users track their environmen
 ## How We Use Your Data
 
 1. **Water Usage Calculations**
-   - Calculate water consumption equivalence based on your location
+   - Calculate water consumption equivalence based on your country
    - Generate usage statistics for different time periods
    - Display progress towards user-set usage limits
 
@@ -47,12 +40,6 @@ LLM Water Tracker is a browser extension that helps users track their environmen
 - No data is stored on external servers
 - No personal information is transmitted to third parties
 
-### Third-Party Services
-- We use the following third-party services:
-  - ipapi.co: For IP-based geolocation (fallback only)
-  - BigDataCloud: For reverse geocoding of coordinates
-  - These services are used only when geolocation permission is denied
-
 ## Data Retention and User Control
 
 ### Retention
@@ -64,7 +51,6 @@ LLM Water Tracker is a browser extension that helps users track their environmen
 ### User Control
 - You can:
   - Reset all statistics at any time
-  - Deny location permissions (falls back to average values)
   - Set and modify usage limits
   - Control when tracking starts via the welcome screen
 
@@ -91,8 +77,4 @@ For privacy concerns or questions about data handling, please contact us through
 You have the right to:
 - Access your stored data (viewable in extension storage)
 - Delete your data (via reset function)
-- Disable location tracking
 - Uninstall the extension at any time
-
-## Children's Privacy
-This extension is not intended for and does not knowingly collect data from users under 13 years of age. 

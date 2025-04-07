@@ -18,7 +18,7 @@ document.addEventListener('DOMContentLoaded', function() {
   // New element references
   const onboardingModal = document.getElementById('onboardingModal');
   const welcomeStep = document.getElementById('welcomeStep');
-  const limitsStep = document.getElementById('limitsStep');
+  const countryStep = document.getElementById('countryStep');
   const getStartedBtn = document.getElementById('getStartedBtn');
   const saveLimitsBtn = document.getElementById('saveLimitsBtn');
   const settingsModal = document.getElementById('settingsModal');
@@ -45,8 +45,48 @@ document.addEventListener('DOMContentLoaded', function() {
   const monthlyProgress = document.getElementById('monthlyProgress');
   const yearlyProgress = document.getElementById('yearlyProgress');
 
-  // Country-specific water usage data (submissions per 1L)
-  // Source: https://arxiv.org/pdf/2304.03271
+  const countrySelect = document.getElementById('countrySelect');
+  const continueBtn = document.getElementById('continueBtn');
+  const countryError = document.getElementById('countryError');
+
+  const countrySettingsSelect = document.getElementById('countrySettingsSelect');
+
+  const pauseTrackingBtn = document.getElementById('pauseTrackingBtn');
+  const stopTrackingBtn = document.getElementById('stopTrackingBtn');
+
+  // Add this constant at the top of the file
+  const allCountries = {
+    'AF': 'Afghanistan', 'AL': 'Albania', 'DZ': 'Algeria', 'AD': 'Andorra', 'AO': 'Angola', 'AG': 'Antigua and Barbuda', 'AR': 'Argentina', 'AM': 'Armenia', 'AU': 'Australia', 'AT': 'Austria', 'AZ': 'Azerbaijan',
+    'BS': 'Bahamas', 'BH': 'Bahrain', 'BD': 'Bangladesh', 'BB': 'Barbados', 'BY': 'Belarus', 'BE': 'Belgium', 'BZ': 'Belize', 'BJ': 'Benin', 'BT': 'Bhutan', 'BO': 'Bolivia', 'BA': 'Bosnia and Herzegovina', 'BW': 'Botswana', 'BR': 'Brazil', 'BN': 'Brunei', 'BG': 'Bulgaria', 'BF': 'Burkina Faso', 'BI': 'Burundi',
+    'KH': 'Cambodia', 'CM': 'Cameroon', 'CA': 'Canada', 'CV': 'Cape Verde', 'CF': 'Central African Republic', 'TD': 'Chad', 'CL': 'Chile', 'CN': 'China', 'CO': 'Colombia', 'KM': 'Comoros', 'CG': 'Congo', 'CD': 'Congo, Democratic Republic', 'CR': 'Costa Rica', 'HR': 'Croatia', 'CU': 'Cuba', 'CY': 'Cyprus', 'CZ': 'Czechia',
+    'DK': 'Denmark', 'DJ': 'Djibouti', 'DM': 'Dominica', 'DO': 'Dominican Republic',
+    'EC': 'Ecuador', 'EG': 'Egypt', 'SV': 'El Salvador', 'GQ': 'Equatorial Guinea', 'ER': 'Eritrea', 'EE': 'Estonia', 'ET': 'Ethiopia',
+    'FJ': 'Fiji', 'FI': 'Finland', 'FR': 'France',
+    'GA': 'Gabon', 'GM': 'Gambia', 'GE': 'Georgia', 'DE': 'Germany', 'GH': 'Ghana', 'GR': 'Greece', 'GD': 'Grenada', 'GT': 'Guatemala', 'GN': 'Guinea', 'GW': 'Guinea-Bissau', 'GY': 'Guyana',
+    'HT': 'Haiti', 'HN': 'Honduras', 'HU': 'Hungary',
+    'IS': 'Iceland', 'IN': 'India', 'ID': 'Indonesia', 'IR': 'Iran', 'IQ': 'Iraq', 'IE': 'Ireland', 'IL': 'Israel', 'IT': 'Italy',
+    'JM': 'Jamaica', 'JP': 'Japan', 'JO': 'Jordan',
+    'KZ': 'Kazakhstan', 'KE': 'Kenya', 'KI': 'Kiribati', 'KP': 'Korea, North', 'KR': 'Korea, South', 'KW': 'Kuwait', 'KG': 'Kyrgyzstan',
+    'LA': 'Laos', 'LV': 'Latvia', 'LB': 'Lebanon', 'LS': 'Lesotho', 'LR': 'Liberia', 'LY': 'Libya', 'LI': 'Liechtenstein', 'LT': 'Lithuania', 'LU': 'Luxembourg',
+    'MK': 'North Macedonia', 'MG': 'Madagascar', 'MW': 'Malawi', 'MY': 'Malaysia', 'MV': 'Maldives', 'ML': 'Mali', 'MT': 'Malta', 'MH': 'Marshall Islands', 'MR': 'Mauritania', 'MU': 'Mauritius', 'MX': 'Mexico', 'FM': 'Micronesia', 'MD': 'Moldova', 'MC': 'Monaco', 'MN': 'Mongolia', 'ME': 'Montenegro', 'MA': 'Morocco', 'MZ': 'Mozambique', 'MM': 'Myanmar',
+    'NA': 'Namibia', 'NR': 'Nauru', 'NP': 'Nepal', 'NL': 'Netherlands', 'NZ': 'New Zealand', 'NI': 'Nicaragua', 'NE': 'Niger', 'NG': 'Nigeria', 'NO': 'Norway',
+    'OM': 'Oman',
+    'PK': 'Pakistan', 'PW': 'Palau', 'PA': 'Panama', 'PG': 'Papua New Guinea', 'PY': 'Paraguay', 'PE': 'Peru', 'PH': 'Philippines', 'PL': 'Poland', 'PT': 'Portugal',
+    'QA': 'Qatar',
+    'RO': 'Romania', 'RU': 'Russia', 'RW': 'Rwanda',
+    'KN': 'Saint Kitts and Nevis', 'LC': 'Saint Lucia', 'VC': 'Saint Vincent and the Grenadines', 'WS': 'Samoa', 'SM': 'San Marino', 'ST': 'Sao Tome and Principe', 'SA': 'Saudi Arabia', 'SN': 'Senegal', 'RS': 'Serbia', 'SC': 'Seychelles', 'SL': 'Sierra Leone', 'SG': 'Singapore', 'SK': 'Slovakia', 'SI': 'Slovenia', 'SB': 'Solomon Islands', 'SO': 'Somalia', 'ZA': 'South Africa', 'SS': 'South Sudan', 'ES': 'Spain', 'LK': 'Sri Lanka', 'SD': 'Sudan', 'SR': 'Suriname', 'SZ': 'Eswatini', 'SE': 'Sweden', 'CH': 'Switzerland', 'SY': 'Syria',
+    'TW': 'Taiwan', 'TJ': 'Tajikistan', 'TZ': 'Tanzania', 'TH': 'Thailand', 'TL': 'Timor-Leste', 'TG': 'Togo', 'TO': 'Tonga', 'TT': 'Trinidad and Tobago', 'TN': 'Tunisia', 'TR': 'Turkey', 'TM': 'Turkmenistan', 'TV': 'Tuvalu',
+    'UG': 'Uganda', 'UA': 'Ukraine', 'AE': 'United Arab Emirates', 'GB': 'United Kingdom', 'US': 'United States', 'UY': 'Uruguay', 'UZ': 'Uzbekistan',
+    'VU': 'Vanuatu', 'VA': 'Vatican City', 'VE': 'Venezuela', 'VN': 'Vietnam',
+    'YE': 'Yemen',
+    'ZM': 'Zambia', 'ZW': 'Zimbabwe',
+    'PS': 'Palestine'
+  };
+  
+  const sourceLink = '<a href="https://arxiv.org/pdf/2304.03271" target="_blank" style="color: #4A90E2; text-decoration: underline;">source</a>';
+
+
+  // Update the countryData object to include the average calculation
   const countryData = {
     'US': { value: 59.2, name: 'United States' },    // 29.6 * 2
     'AU': { value: 52.2, name: 'Australia' },        // 26.1 * 2
@@ -60,115 +100,63 @@ document.addEventListener('DOMContentLoaded', function() {
     'SE': { value: 35.4, name: 'Sweden' }            // 17.7 * 2
   };
 
-  // Calculate average of all countries
+  // Calculate average of all countries with data
   const averageSubmissions = Object.values(countryData).reduce((a, b) => a + b.value, 0) / Object.keys(countryData).length;
   countryData["AVG"] = { value: averageSubmissions.toFixed(2), name: 'Average' };
 
-  async function getUserCountryCode() {
-    try {
-        const position = await new Promise((resolve, reject) => {
-        if (!navigator.geolocation) { // If geolocation is not supported, use the browser locale
-          return getUserCountryFromUI();
-        }
-        
-        navigator.geolocation.getCurrentPosition(resolve, reject);
-      });
 
-      const { latitude, longitude } = position.coords;
-      
-      // Use OpenStreetMap's Nominatim for reverse geocoding
-      const url = `https://nominatim.openstreetmap.org/reverse?lat=${latitude}&lon=${longitude}&format=json`;
-      const response = await fetch(url);
-      const data = await response.json();
-      
-      const countryCode = data.address.country_code.toUpperCase();
-      return countryCode;
-    } catch (error) {
-      return 'AVG'; // Return average if we can't determine the country
-    }
-  }
-  
-  async function getLocationFromIP() {
-    try {
-      const response = await fetch('https://ipapi.co/json/');
-      const data = await response.json();
-      
-      if (data.error) {
-        throw new Error('Failed to get location data');
-      }
-      
-      return {
-        country_code: data.country_code,
-        city: data.city,
-        region: data.region,
-        country: data.country_name,
-        latitude: data.latitude,
-        longitude: data.longitude
-      };
-    } catch (error) {
-      console.error('Error getting location from IP:', error);
-      return null;
-    }
+  function isSupportedHostname(hostname) {
+    return hostname.includes('chatgpt.com') || 
+           hostname.includes('claude.ai') || 
+           hostname.includes('gemini.google.com')
   }
 
-  async function getUserCountryWithTimeout() {
-    try {
-      // Create a promise that rejects after 30 seconds
-      const timeoutPromise = new Promise((_, reject) => {
-        setTimeout(() => reject(new Error('Geolocation timeout')), 30000);
-      });
+  // Populate both country dropdowns
+  function populateCountryDropdowns() {
+    // Sort countries alphabetically
+    const sortedCountries = Object.entries(allCountries).sort((a, b) => a[1].localeCompare(b[1]));
+    
+    // Clear existing options except the first one
+    countrySelect.innerHTML = '<option value="">Select a country...</option>';
+    countrySettingsSelect.innerHTML = '<option value="">Select a country...</option>';
+    
+    // Add all countries to both dropdowns
+    sortedCountries.forEach(([code, name]) => {
+      // For onboarding dropdown
+      const option1 = document.createElement('option');
+      option1.value = code;
+      option1.textContent = name;
+      countrySelect.appendChild(option1);
 
-      // Race between the geolocation and the timeout
-      const countryCode = await Promise.race([
-        getUserCountryCode(),
-        timeoutPromise
-      ]);
-
-      return countryCode;
-    } catch (error) {
-      console.log('Geolocation timed out or failed, falling back to IP-based location');
-      try {
-        const locationData = await getLocationFromIP();
-        if (locationData && locationData.country_code) {
-          return locationData.country_code.toUpperCase();
-        }
-        // If IP location fails, try browser UI locale
-        return getUserCountryFromUI();
-      } catch (ipError) {
-        console.error('IP location fallback failed:', ipError);
-        // Final fallback: try browser UI locale
-        return getUserCountryFromUI();
-      }
-    }
+      // For settings dropdown
+      const option2 = document.createElement('option');
+      option2.value = code;
+      option2.textContent = name;
+      countrySettingsSelect.appendChild(option2);
+    });
   }
 
-  // Get user's country from browser locale
-  function getUserCountryFromUI() {
-    try {
-      const locale = chrome.i18n.getUILanguage();
-      return locale.split('-')[1] || locale.split('_')[1] || 'AVG';
-    } catch (error) {
-      console.error('Error getting country from UI:', error);
-      return 'AVG';
-    }
-  }
+  // Call this when the page loads
+  populateCountryDropdowns();
 
-  // Get submissions per 1L for user's country
+  // Modify getSubmissionsPerBottle to handle all countries
   async function getSubmissionsPerBottle() {
     try {
-      const countryCode = await getUserCountryWithTimeout();
-      const countryInfo = countryData[countryCode];
-      const sourceLink = '<a href="https://arxiv.org/pdf/2304.03271" target="_blank" style="color: #4A90E2; text-decoration: underline;">source</a>';
+      const data = await chrome.storage.sync.get('userCountry');
+      const countryCode = data.userCountry;
+      const countryName = allCountries[countryCode];
       
-      if (countryInfo) {
-        countryText.innerHTML = `Using ${countryInfo.name} equivalence: ${countryInfo.value} chats per 1L bottle (${sourceLink})`;
-        return countryInfo.value;
+      if (countryData[countryCode]) {
+        // Country has specific data
+        countryText.innerHTML = `Using ${countryName} equivalence: ${countryData[countryCode].value} chats per 1L bottle (${sourceLink})`;
+        return countryData[countryCode].value;
       } else {
-        countryText.innerHTML = `Using average equivalence: ${countryData["AVG"].value} chats per 1L bottle (${sourceLink})`;
+        // Country doesn't have specific data, use average
+        countryText.innerHTML = `Using average equivalence for ${countryName}: ${countryData["AVG"].value} chats per 1L bottle (${sourceLink})`;
         return countryData["AVG"].value;
       }
     } catch (error) {
-      const sourceLink = '<a href="https://arxiv.org/pdf/2304.03271" target="_blank" style="color: #4A90E2; text-decoration: underline;">source</a>';
+      console.error('Error getting submissions per bottle:', error);
       countryText.innerHTML = `Using average equivalence: ${countryData["AVG"].value} chats per 1L bottle (${sourceLink})`;
       return countryData["AVG"].value;
     }
@@ -181,9 +169,7 @@ document.addEventListener('DOMContentLoaded', function() {
         const url = new URL(tabs[0].url);
         const hostname = url.hostname;
         
-        if (hostname.includes('chatgpt.com') || 
-            hostname.includes('claude.ai') || 
-            hostname.includes('gemini.google.com')) {
+        if (isSupportedHostname(hostname)) {
           statusIndicator.classList.add('supported');
           statusText.textContent = `Tracking enabled for ${hostname}`;
         } else {
@@ -324,31 +310,75 @@ document.addEventListener('DOMContentLoaded', function() {
     });
   });
 
-  // Check if first time user - using chrome.storage.sync instead of local
-  chrome.storage.sync.get(['hasSeenWelcome'], function(data) {
-    if (!data.hasSeenWelcome) {
+  // Get Started button now transitions to country selection
+  getStartedBtn.addEventListener('click', function() {
+    welcomeStep.classList.add('hidden');
+    countryStep.classList.remove('hidden');
+  });
+
+  // Continue button handler
+  continueBtn.addEventListener('click', function() {
+    const selectedCountry = countrySelect.value;
+    if (!selectedCountry) {
+      countryError.classList.remove('hidden');
+      return;
+    }
+    
+    chrome.storage.sync.set({ 
+      hasSeenWelcome: true,
+      userCountry: selectedCountry 
+    }, function() {
+      onboardingModal.classList.add('hidden');
+      mainContent.classList.remove('hidden');
+      updatePopup();
+    });
+  });
+
+  // Hide error when country is selected
+  countrySelect.addEventListener('change', function() {
+    if (this.value) {
+      countryError.classList.add('hidden');
+    }
+  });
+
+  // Check if first time user
+  chrome.storage.sync.get(['hasSeenWelcome', 'userCountry'], function(data) {
+    if (!data.hasSeenWelcome || !data.userCountry) {
       mainContent.classList.add('hidden');
       onboardingModal.classList.remove('hidden');
+      welcomeStep.classList.remove('hidden');
+      countryStep.classList.add('hidden');
     } else {
       mainContent.classList.remove('hidden');
       onboardingModal.classList.add('hidden');
     }
   });
 
-  // Get Started button handler - using chrome.storage.sync instead of local
-  getStartedBtn.addEventListener('click', function() {
-    chrome.storage.sync.set({ hasSeenWelcome: true }, function() {
-      onboardingModal.classList.add('hidden');
-      mainContent.classList.remove('hidden');
-    });
-  });
-
   // Settings button handlers
   settingsButton.addEventListener('click', function() {
-    chrome.storage.sync.get('limits', function(data) {
+    chrome.storage.sync.get(['limits', 'userCountry', 'trackingState'], function(data) {
       if (data.limits) {
         updateLimitInputs(data.limits);
       }
+      if (data.userCountry) {
+        countrySettingsSelect.value = data.userCountry;
+      }
+      
+      // Update tracking status in settings
+      const trackingStatusText = document.getElementById('trackingStatusText');
+      const enableTrackingBtn = document.getElementById('enableTrackingBtn');
+      
+      if (data.trackingState === 'stopped') {
+        trackingStatusText.textContent = 'Stopped';
+        enableTrackingBtn.classList.remove('hidden');
+      } else if (data.trackingState === 'paused') {
+        trackingStatusText.textContent = 'Paused';
+        enableTrackingBtn.classList.add('hidden');
+      } else {
+        trackingStatusText.textContent = 'Active';
+        enableTrackingBtn.classList.add('hidden');
+      }
+      
       settingsModal.classList.remove('hidden');
     });
   });
@@ -375,45 +405,46 @@ document.addEventListener('DOMContentLoaded', function() {
     clearErrors();
     let isValid = true;
 
-    const w = parseFloat(weekly);
-    const m = parseFloat(monthly);
-    const y = parseFloat(yearly);
+    // Convert to numbers, empty values become NaN
+    const w = weekly ? parseFloat(weekly) : null;
+    const m = monthly ? parseFloat(monthly) : null;
+    const y = yearly ? parseFloat(yearly) : null;
 
-    // Check for negative values
-    if (w < 0) {
+    // Check for negative values only if values are provided
+    if (w !== null && w < 0) {
       showError(weeklyError, 'Weekly limit cannot be negative');
       isValid = false;
     }
-    if (m < 0) {
+    if (m !== null && m < 0) {
       showError(monthlyError, 'Monthly limit cannot be negative');
       isValid = false;
     }
-    if (y < 0) {
+    if (y !== null && y < 0) {
       showError(yearlyError, 'Yearly limit cannot be negative');
       isValid = false;
     }
 
-    // Check relationships between periods
-    if (w > m) {
+    // Check relationships between periods only if both values in the comparison exist
+    if (w !== null && m !== null && w > m) {
       showError(weeklyError, 'Weekly limit cannot be greater than monthly limit');
       isValid = false;
     }
-    if (m > y) {
+    if (m !== null && y !== null && m > y) {
       showError(monthlyError, 'Monthly limit cannot be greater than yearly limit');
       isValid = false;
     }
 
-    // Check for empty or invalid values
-    if (!weekly || isNaN(w)) {
-      showError(weeklyError, 'Please enter a valid weekly limit');
+    // Check for invalid number formats if values are provided
+    if (weekly && isNaN(w)) {
+      showError(weeklyError, 'Please enter a valid number');
       isValid = false;
     }
-    if (!monthly || isNaN(m)) {
-      showError(monthlyError, 'Please enter a valid monthly limit');
+    if (monthly && isNaN(m)) {
+      showError(monthlyError, 'Please enter a valid number');
       isValid = false;
     }
-    if (!yearly || isNaN(y)) {
-      showError(yearlyError, 'Please enter a valid yearly limit');
+    if (yearly && isNaN(y)) {
+      showError(yearlyError, 'Please enter a valid number');
       isValid = false;
     }
 
@@ -428,9 +459,9 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     const limits = {
-      weekly: parseFloat(weekly),
-      monthly: parseFloat(monthly),
-      yearly: parseFloat(yearly)
+      weekly: weekly ? parseFloat(weekly) : null,
+      monthly: monthly ? parseFloat(monthly) : null,
+      yearly: yearly ? parseFloat(yearly) : null
     };
 
     chrome.storage.sync.set({ limits }, function() {
@@ -443,11 +474,36 @@ document.addEventListener('DOMContentLoaded', function() {
 
   // Save settings button handler
   saveSettingsBtn.addEventListener('click', function() {
-    saveLimits(
-      weeklyLimitSettings.value,
-      monthlyLimitSettings.value,
-      yearlyLimitSettings.value
-    );
+    const selectedCountry = countrySettingsSelect.value;
+    if (!selectedCountry) {
+      // Show error or handle empty country selection
+      return;
+    }
+
+    const weekly = weeklyLimitSettings.value;
+    const monthly = monthlyLimitSettings.value;
+    const yearly = yearlyLimitSettings.value;
+
+    const validation = validateLimits(weekly, monthly, yearly);
+    if (!validation.valid) {
+      return;
+    }
+
+    const limits = {
+      weekly: parseFloat(weekly),
+      monthly: parseFloat(monthly),
+      yearly: parseFloat(yearly)
+    };
+
+    // Save both limits and country
+    chrome.storage.sync.set({ 
+      limits: limits,
+      userCountry: selectedCountry 
+    }, function() {
+      settingsModal.classList.add('hidden');
+      updatePopup(); // This will refresh the display with the new country data
+      updateProgressBars();
+    });
   });
 
   function updateLimitInputs(limits) {
@@ -457,7 +513,12 @@ document.addEventListener('DOMContentLoaded', function() {
   }
 
   function updateProgressBar(element, current, limit) {
-    if (!limit) return;
+    if (limit === null) {
+      // If no limit is set, hide or reset the progress bar
+      element.style.width = '0%';
+      element.classList.remove('low', 'medium', 'high');
+      return;
+    }
 
     const percentage = (current / limit) * 100;
     element.style.width = `${Math.min(percentage, 100)}%`;
@@ -483,9 +544,24 @@ document.addEventListener('DOMContentLoaded', function() {
       const monthlyWater = parseFloat(monthlyWaterEl.textContent);
       const yearlyWater = parseFloat(yearlyWaterEl.textContent);
 
-      updateProgressBar(weeklyProgress, weeklyWater, data.limits.weekly);
-      updateProgressBar(monthlyProgress, monthlyWater, data.limits.monthly);
-      updateProgressBar(yearlyProgress, yearlyWater, data.limits.yearly);
+      // Only update progress bars for limits that are set
+      if (data.limits.weekly !== null) {
+        updateProgressBar(weeklyProgress, weeklyWater, data.limits.weekly);
+      } else {
+        updateProgressBar(weeklyProgress, 0, null);
+      }
+
+      if (data.limits.monthly !== null) {
+        updateProgressBar(monthlyProgress, monthlyWater, data.limits.monthly);
+      } else {
+        updateProgressBar(monthlyProgress, 0, null);
+      }
+
+      if (data.limits.yearly !== null) {
+        updateProgressBar(yearlyProgress, yearlyWater, data.limits.yearly);
+      } else {
+        updateProgressBar(yearlyProgress, 0, null);
+      }
     });
   }
 
@@ -500,4 +576,90 @@ document.addEventListener('DOMContentLoaded', function() {
   weeklyLimitSettings.addEventListener('input', clearErrors);
   monthlyLimitSettings.addEventListener('input', clearErrors);
   yearlyLimitSettings.addEventListener('input', clearErrors);
+
+  // Function to update button states
+  function updateTrackingControls(trackingState) {
+    const isPaused = trackingState === 'paused';
+    const isStopped = trackingState === 'stopped';
+
+    // Update pause button
+    if (isPaused) {
+      pauseTrackingBtn.classList.add('paused');
+      pauseTrackingBtn.querySelector('.material-symbols-rounded').textContent = 'play_arrow';
+      pauseTrackingBtn.querySelector('.button-text').textContent = 'Resume Tracking';
+    } else {
+      pauseTrackingBtn.classList.remove('paused');
+      pauseTrackingBtn.querySelector('.material-symbols-rounded').textContent = 'pause';
+      pauseTrackingBtn.querySelector('.button-text').textContent = 'Pause Tracking';
+    }
+
+    // Disable buttons appropriately
+    pauseTrackingBtn.disabled = isStopped;
+    stopTrackingBtn.disabled = isStopped;
+
+    // Update status indicator
+    if (isStopped) {
+      statusIndicator.classList.remove('supported', 'unsupported');
+      statusIndicator.classList.add('unsupported');
+      statusText.textContent = 'Tracking stopped';
+    } else if (isPaused) {
+      statusIndicator.classList.remove('supported', 'unsupported');
+      statusIndicator.classList.add('unsupported');
+      statusText.textContent = 'Tracking paused';
+    } else {
+      checkHostnameSupport(); // This will update the status based on the current site
+    }
+  }
+
+  // Load initial tracking state
+  chrome.storage.sync.get(['trackingState'], function(data) {
+    const trackingState = data.trackingState || 'active';
+    updateTrackingControls(trackingState);
+  });
+
+  // Pause/Resume button handler
+  pauseTrackingBtn.addEventListener('click', function() {
+    chrome.storage.sync.get(['trackingState'], function(data) {
+      const currentState = data.trackingState || 'active';
+      const newState = currentState === 'paused' ? 'active' : 'paused';
+      
+      chrome.storage.sync.set({ trackingState: newState }, function() {
+        updateTrackingControls(newState);
+        // Notify background script of state change
+        chrome.runtime.sendMessage({ 
+          action: 'updateTrackingState', 
+          state: newState 
+        });
+      });
+    });
+  });
+
+  // Stop button handler
+  stopTrackingBtn.addEventListener('click', function() {
+    if (confirm('Are you sure you want to stop tracking? This will disable all tracking until you re-enable it in the extension settings.')) {
+      chrome.storage.sync.set({ trackingState: 'stopped' }, function() {
+        updateTrackingControls('stopped');
+        // Notify background script of state change
+        chrome.runtime.sendMessage({ 
+          action: 'updateTrackingState', 
+          state: 'stopped' 
+        });
+      });
+    }
+  });
+
+  // Add enable tracking button handler
+  document.getElementById('enableTrackingBtn').addEventListener('click', function() {
+    chrome.storage.sync.set({ trackingState: 'active' }, function() {
+      updateTrackingControls('active');
+      // Update the status in settings
+      document.getElementById('trackingStatusText').textContent = 'Active';
+      this.classList.add('hidden');
+      // Notify background script
+      chrome.runtime.sendMessage({ 
+        action: 'updateTrackingState', 
+        state: 'active' 
+      });
+    }.bind(this));
+  });
 }); 

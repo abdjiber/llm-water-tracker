@@ -478,6 +478,17 @@ h2 {
 /* Onboarding styles */
 .onboarding-step {
   text-align: center;
+  transition: opacity 0.3s ease;
+}
+
+.onboarding-step.hidden {
+  display: none;
+  opacity: 0;
+}
+
+.onboarding-step:not(.hidden) {
+  display: block;
+  opacity: 1;
 }
 
 .onboarding-step h2 {
@@ -690,4 +701,169 @@ h2 {
   color: var(--primary-dark);
   font-size: 14px;
   margin: 0;
+}
+
+/* Privacy note styles */
+.privacy-note {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: #f1f5f9;
+  padding: 12px;
+  border-radius: 8px;
+  margin: 12px 0;
+}
+
+.privacy-note .material-symbols-rounded {
+  color: #64748b;
+  font-size: 20px;
+}
+
+.privacy-note p {
+  color: #475569;
+  font-size: 13px;
+  margin: 0;
+}
+
+.privacy-note a {
+  color: var(--primary-color);
+  text-decoration: none;
+  font-weight: 500;
+  transition: color 0.2s;
+}
+
+.privacy-note a:hover {
+  color: var(--primary-dark);
+  text-decoration: underline;
+}
+
+.country-note {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  background: #e3f2fd;
+  padding: 12px;
+  border-radius: 8px;
+  margin-top: 12px;
+}
+
+.country-note .material-symbols-rounded {
+  font-size: 20px;
+  color: var(--primary-color);
+}
+
+.country-note p {
+  color: var(--text-secondary);
+  font-size: 13px;
+  margin: 0;
+  line-height: 1.4;
+}
+
+.settings-section {
+  margin-bottom: 24px;
+  padding-bottom: 24px;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.settings-section:last-of-type {
+  border-bottom: none;
+  margin-bottom: 16px;
+  padding-bottom: 0;
+}
+
+.settings-section h3 {
+  font-size: 16px;
+  font-weight: 500;
+  color: var(--text-primary);
+  margin-bottom: 16px;
+}
+
+/* Update existing country-selection styles to work in settings too */
+.country-selection {
+  margin-bottom: 12px;
+}
+
+.country-dropdown {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  font-size: 14px;
+  font-family: 'Inter', sans-serif;
+  background-color: white;
+  cursor: pointer;
+  margin-bottom: 8px;
+}
+
+.country-dropdown:focus {
+  outline: none;
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 2px rgba(74, 144, 226, 0.1);
+}
+
+.tracking-controls {
+  display: flex;
+  gap: 8px;
+  padding: 8px 0;
+  justify-content: center;
+}
+
+.control-button {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 16px;
+  border: none;
+  border-radius: var(--radius-sm);
+  font-family: 'Inter', sans-serif;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  background-color: var(--card-background);
+  color: var(--text-primary);
+}
+
+.control-button:hover {
+  background-color: var(--primary-light);
+  color: white;
+}
+
+.control-button.warning:hover {
+  background-color: var(--error-color);
+  color: white;
+}
+
+.control-button .material-symbols-rounded {
+  font-size: 18px;
+}
+
+.control-button.paused {
+  background-color: var(--primary-light);
+  color: white;
+}
+
+.control-button.paused:hover {
+  background-color: var(--primary-color);
+}
+
+.control-button.paused .material-symbols-rounded {
+  content: "play_arrow";
+}
+
+.control-button.paused .button-text {
+  content: "Resume Tracking";
+}
+
+/* Add styles for disabled state */
+.control-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  background-color: var(--card-background);
+  color: var(--text-secondary);
+}
+
+.control-button:disabled:hover {
+  background-color: var(--card-background);
+  color: var(--text-secondary);
 } 
