@@ -2,7 +2,10 @@
 
 A Chrome extension that helps users track and understand the water consumption impact of their interactions with Large Language Models (LLMs).
 
-![LLM Water Tracker](icons/icon128.png)
+<div style="display: flex; justify-content: space-between; margin: 20px 0;">
+  <img src="screenshots/llm-water-tracker-screenshot-1.png" alt="LLM Water Tracker Screenshot 1" width="48%">
+  <img src="screenshots/llm-water-tracker-screenshot-2.png" alt="LLM Water Tracker Screenshot 2" width="48%">
+</div>
 
 ## Overview
 
